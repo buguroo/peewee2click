@@ -28,6 +28,7 @@ setup(name='peewee2click',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'peewee',
-          'click'
+          'click==6.7',
+          'peewee==2.6.0',
+          'tabulate==0.7.7',
       ])
