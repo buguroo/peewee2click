@@ -130,10 +130,11 @@ def test_click_options_from_model_fields_sets_to_str_field_unknown_peewee_type(
         crudl_mock_model, field_type):
     """
     Este test comprueba que la función click_options_from_model_fields crea
-    una opción de `click` de tipo `str` para lost tipos de `peewee`
+    una opción de `click` de tipo `str` para los tipos de `peewee`
     `DateTimeField`, `DateField`, `TimeField`, `BlobField` y `BareField`,
     es decir , aquellos que no tienen una equivalencia directa con int, bool,
-    str, float o None
+    str, float o None. Además, comprueba que disparan un warning de tipo
+    `SyntaxWarning`.
     """
 
     from peewee2click import CRUDL
@@ -142,9 +143,11 @@ def test_click_options_from_model_fields_sets_to_str_field_unknown_peewee_type(
         test_attr = field_type()
 
     with patch('peewee2click.click.option') as option_mock:
-        @CRUDL.click_options_from_model_fields(CrudlMockModelWithUnknownField)
-        def click_func(**kwargs):
-            pass
+        with pytest.warns(SyntaxWarning):
+            @CRUDL.click_options_from_model_fields(
+                CrudlMockModelWithUnknownField)
+            def click_func(**kwargs):
+                pass
 
     option_mock.assert_any_call("--test-attr", type=str, help=ANY)
 
@@ -234,7 +237,7 @@ def test_create_method_asks_for_confirmation_when_no_force():
 
     with patch('peewee2click.click.confirm') as click_mock:
         CRUDL.create(MagicMock(), False)
-    click_mock.assert_called_once()
+    click_mock.assert_called_once_with(ANY)
 
 
 def test_create_method_creates_object_when_confirm_is_true(crudl_mock_model):
@@ -320,7 +323,7 @@ def test_show_method_prints_object_with_formatting_functions(crudl_mock_model):
     model_mock.get.assert_called_once_with(model_mock._meta.primary_key == 3)
     format_mock.assert_called_once_with(
         model_mock.get.return_value,
-        model_mock._meta.get_field_names.return_value)
+        sorted(model_mock._meta.fields.keys.return_value))
     print_mock.assert_called_once_with(format_mock.return_value)
 
 
@@ -415,9 +418,13 @@ def test_update_method_asks_for_confirmation_when_no_force():
 
     from peewee2click import CRUDL
 
+    model = MagicMock()
+    # Queremos que la interfaz de execute sea realista y devuelva un entero,
+    # simulando ser el número de filas afectadas.
+    model.update.return_value.where.return_value.execute.return_value = 0
     with patch('peewee2click.click.confirm') as click_mock:
-        CRUDL.update(MagicMock(), 1, False)
-    click_mock.assert_called_once()
+        CRUDL.update(model, 1, False, new_field="whatever")
+    click_mock.assert_called_once_with(ANY)
 
 
 def test_update_method_updates_object_when_confirm_is_true(crudl_mock_model):
@@ -479,7 +486,7 @@ def test_delete_method_asks_for_confirmation_when_no_force():
 
     with patch('peewee2click.click.confirm') as click_mock:
         CRUDL.delete(MagicMock(), 1, False)
-    click_mock.assert_called_once()
+    click_mock.assert_called_once_with(ANY)
 
 
 def test_delete_method_deletes_object_when_confirm_is_true(crudl_mock_model):
@@ -536,7 +543,7 @@ def test_list_method_selects_all_objects_and_print_them():
     with patch(format_func) as format_mock, patch(print_func) as print_mock:
         CRUDL.list(model_mock, fields)
 
-    model_mock.select.assert_called_once()
+    model_mock.select.assert_called_once_with()
     format_mock.assert_called_once_with(model_mock.select.return_value, fields)
     print_mock.assert_called_once_with(format_mock.return_value,
                                        headers=fields)
@@ -565,7 +572,7 @@ def test_list_method_adds_extra_fields():
     with patch(format_func) as format_mock, patch(print_func) as print_mock:
         CRUDL.list(model_mock, base_fields, extra_fields=extra_fields)
 
-    model_mock.select.assert_called_once()
+    model_mock.select.assert_called_once_with()
     format_mock.assert_called_once_with(model_mock.select.return_value,
                                         base_fields + extra_fields)
     print_mock.assert_called_once_with(format_mock.return_value,
@@ -603,7 +610,7 @@ def test_list_method_removes_duplicated_fields():
     # En los asserts comparamos contra una lista que solo tiene dos fields
     expected_fields = [field_mock, extra_field_mock]
 
-    model_mock.select.assert_called_once()
+    model_mock.select.assert_called_once_with()
     format_mock.assert_called_once_with(model_mock.select.return_value,
                                         expected_fields)
     print_mock.assert_called_once_with(format_mock.return_value,
