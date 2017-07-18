@@ -75,9 +75,9 @@ Model fields for you, creating automatically the parameters options
 Other commands
 --------------
 
-Besides the ``CRUDL`` methods seen in the example above, CRUDL also implements
-two helper functions: ``one_and_only_one`` and ``max_one``. Both provides a way
-of checking that arguments are passed in a proper way.
+Besides the ``CRUDL`` methods seen in the example above, `peewee2click` also
+provides two helper functions: ``one_and_only_one`` and ``max_one``. Both
+provides a way of checking that arguments are passed in a proper way.
 
 Check the docstrings of the functions for further information.
 
