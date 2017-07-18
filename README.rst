@@ -1,6 +1,15 @@
 peewee2click: Easy command-line interfaces for Peewee models
 ============================================================
 
+.. image:: https://img.shields.io/pypi/v/peewee2click.svg
+    :target: https://pypi.python.org/pypi/peewee2click
+
+.. image:: https://img.shields.io/pypi/pyversions/peewee2click.svg
+    :target: https://pypi.python.org/pypi/peewee2click
+
+.. image:: https://travis-ci.org/buguroo/peewee2click.svg?branch=master
+    :target: https://travis-ci.org/buguroo/peewee2click
+
 peewee2click is an easy to use Click_ helper to create command-line CRUDL interfaces
 for your peewee_ models.
 
