@@ -10,8 +10,13 @@ What are command-line CRUDL interfaces?
 Interfaces that let you **Create**, **Read**, **Update**, **Delete** or
 **List** your models via command-line.
 
-Example
--------
+Installation
+------------
+
+Just run ``pip install peewee2click``.
+
+Example of use
+--------------
 
 Let supose you have the following *peewee* class:
 
@@ -75,6 +80,13 @@ two helper functions: ``one_and_only_one`` and ``max_one``. Both provides a way
 of checking that arguments are passed in a proper way.
 
 Check the docstrings of the functions for further information.
+
+Running the tests
+-----------------
+
+Install the develop dependencies: ``pip install -e requirements/develop.txt``. Then run ``tox``.
+
+You will need `sqlite` support in your Python client to run the tests.
 
 
 .. _peewee: http://docs.peewee-orm.com/en/latest/
