@@ -86,7 +86,7 @@ Other commands
 
 Besides the ``CRUDL`` methods seen in the example above, `peewee2click` also
 provides two helper functions: ``one_and_only_one`` and ``max_one``. Both
-provides a way of checking that arguments are passed in a proper way.
+provide a way of checking that arguments are passed in a proper way.
 
 Check the docstrings of the functions for further information.
 
