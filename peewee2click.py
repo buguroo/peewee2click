@@ -99,7 +99,7 @@ class CRUDL:
                     continue
 
                 for db_fields, asc_type in DBFIELD_TO_TYPE.items():
-                    if field.db_field in db_fields:
+                    if field.get_db_field() in db_fields:
                         type_ = asc_type
                         break
                 else:
