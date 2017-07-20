@@ -1,10 +1,27 @@
 import collections
+import datetime
 import functools
 import itertools
 import warnings
 
 from tabulate import tabulate
 import click
+
+
+class DateParamType(click.ParamType):
+    name = 'date'
+
+    def convert(self, value, param, ctx):
+        try:
+            # date will fail if it doesn't get exactly three params
+            result = datetime.date(*[int(x) for x in value.split('-')])
+        except (ValueError, TypeError):
+            self.fail("{} is not a date in the form YYYY-MM-DD".format(value))
+        else:
+            return result
+
+
+DATE_PARAM_TYPE = DateParamType()
 
 
 def _number_of_arguments_in_list(ctx, *what):
@@ -90,6 +107,7 @@ class CRUDL:
                 ("bool", ): bool,
                 ("text", "string"): str,
                 ("float", ): float,
+                ("date", ): DATE_PARAM_TYPE,
                 ("primary_key", ): None
             }
 
