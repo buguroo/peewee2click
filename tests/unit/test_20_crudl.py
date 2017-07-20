@@ -121,7 +121,6 @@ def test_click_options_from_model_fields_skips_fields(crudl_mock_model):
 
 @pytest.mark.parametrize("field_type", [
     DateTimeField,
-    DateField,
     TimeField,
     BlobField,
     BareField,
@@ -131,7 +130,7 @@ def test_click_options_from_model_fields_sets_to_str_field_unknown_peewee_type(
     """
     Este test comprueba que la función click_options_from_model_fields crea
     una opción de `click` de tipo `str` para los tipos de `peewee`
-    `DateTimeField`, `DateField`, `TimeField`, `BlobField` y `BareField`,
+    `DateTimeField`, `TimeField`, `BlobField` y `BareField`,
     es decir , aquellos que no tienen una equivalencia directa con int, bool,
     str, float o None. Además, comprueba que disparan un warning de tipo
     `SyntaxWarning`.
