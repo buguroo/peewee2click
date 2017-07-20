@@ -8,14 +8,25 @@ from tabulate import tabulate
 import click
 
 
+def _date_string_to_date(date_string):
+    try:
+        # date will fail if it doesn't get exactly three params
+        return datetime.date(*[int(x) for x in date_string.split('-')])
+    except (ValueError, TypeError):
+        raise ValueError
+
+
 class DateParamType(click.ParamType):
+    """
+    Extra class to handle `DateField` of `peewee` in `click`.
+    """
+
     name = 'date'
 
     def convert(self, value, param, ctx):
         try:
-            # date will fail if it doesn't get exactly three params
-            result = datetime.date(*[int(x) for x in value.split('-')])
-        except (ValueError, TypeError):
+            result = _date_string_to_date(value)
+        except ValueError:
             self.fail("{} is not a date in the form YYYY-MM-DD".format(value))
         else:
             return result
